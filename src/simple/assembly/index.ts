@@ -1,27 +1,30 @@
-import { storage, Context } from "near-sdk-as"
+import { u128 } from 'near-sdk-as';
+import { Member } from './model';
 
-// return the string 'hello world'
-export function helloWorld(): string {
-  const predecessor = Context.predecessor
-  return 'hello ' + predecessor 
+export function create(memberType: string): Member {
+  return Member.createMember(memberType);
 }
 
-// read the given key from account (contract) storage
-export function read(key: string): string {
-  if (storage.hasKey(key)) {
-    return `✅ Key [ ${key} ] has value [ ${storage.getString(key)!} ]`
-  } else {
-    return `🚫 Key [ ${key} ] not found in storage. ( ${storageReport()} )`
-  }
+export function cancel(id: u32): void {
+  Member.cancelMember(id);
 }
 
-// write the given value at the given key to account (contract) storage
-export function write(key: string, value: string): string {
-  storage.set(key, value)
-  return `✅ Data saved. ( ${storageReport()} )`
+export function getById(id: u32): Member {
+  return Member.getById(id);
 }
 
-// private helper method used by read() and write() above
-function storageReport(): string {
-  return `storage [ ${Context.storageUsage} bytes ]`
+export function get(record: u32,limit: u32 = 96): Member[] {
+  return Member.getMembers(record,limit);
+}
+
+export function pay(id: u32, amount:u128): Member{
+  return Member.payFee(id,amount);
+}
+
+export function freeze(id: u32): Member {
+  return Member.freezeMember(id);
+}
+
+export function activate(id: u32): Member {
+  return Member.activateMember(id);
 }
